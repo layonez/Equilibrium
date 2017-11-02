@@ -1,4 +1,7 @@
-﻿using Microsoft.Owin;
+﻿using System.Web;
+using System.IO;
+using Microsoft.Owin.Extensions;
+using Microsoft.Owin;
 using Owin;
 using Equilibrium;
 using Microsoft.AspNet.SignalR;
@@ -10,9 +13,16 @@ namespace Equilibrium
 	{
 		public void Configuration(IAppBuilder app)
 		{
-			// Any connection or hub wire up and configuration should go here
+			LogHelper.Log($"Приложение запустилось");
+
 			app.MapSignalR();
 			GlobalHost.HubPipeline.RequireAuthentication();
+
+			var scheduler = new Scheduler();
+			scheduler.Start();
+
+			LogHelper.Log($"Все службы запустились");
+
 		}
 	}
 }
