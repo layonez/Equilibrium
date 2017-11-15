@@ -12,6 +12,8 @@ namespace Equilibrium
 {
 	public class Scheduler
 	{
+		private static List<Tuple<double, int, int>> _requestTimings = new List<Tuple<double, int, int>>();
+
 		private ThresholdHelper ThresholdHelper { get; }
 		private ClarityProvider ClarityProvider { get; }
 		public Scheduler()
@@ -35,19 +37,28 @@ namespace Equilibrium
 		
 		private void GetDisbalanceAndSendToClients()
 		{
+			if (_requestTimings.Count > 100)
+			{
+				LogHelper.LogStatistic(_requestTimings);
+				_requestTimings.Clear();
+			}
 			var disbalance = ClarityProvider.GetDisbalance(UserConnectionManager.GetActiveUsers());
 			if (disbalance.Ok && disbalance.Data.Any())
 			{
 				UserConnectionManager.SetDisbalance(disbalance.Data);
 				UserConnectionManager.NotifyAll();
-
-				Task.Delay(TimeSpan.FromMilliseconds(ThresholdHelper.GetTimeToNextCall(disbalance.Elapsed.TotalMilliseconds)))
+				var timeToNextCall = ThresholdHelper.GetTimeToNextCall(disbalance.Elapsed.TotalSeconds);
+				Task.Delay(TimeSpan.FromMilliseconds(timeToNextCall))
 					.ContinueWith(task => GetDisbalanceAndSendToClients());
+
+				_requestTimings.Add(new Tuple<double, int, int>(disbalance.Elapsed.TotalSeconds, disbalance.Data.Count, timeToNextCall));
 			}
 			else
 			{
 				Task.Delay(TimeSpan.FromMilliseconds(1000))
 					.ContinueWith(task => GetDisbalanceAndSendToClients());
+
+				_requestTimings.Add(new Tuple<double, int, int>(0, 0, 0));
 			}
 		}
 	}

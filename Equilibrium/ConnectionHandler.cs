@@ -36,9 +36,12 @@ namespace Equilibrium
 						{
 							var newIds = new List<string>() { connectionId };
 							newIds.AddRange(oldData.ConnectionIds);
-							var newData = new UserData(login) {ConnectionIds = newIds};
+							var newData = new UserData(login) {ConnectionIds = newIds, NeedToNotify = true};
 							success = ConnectedUsers.TryUpdate(login, newData, oldData);
+
+							LogHelper.Log($"Новый коннект {login}-{connectionId} [{newIds.Count}]");
 						}
+
 						break;
 					}
 				}
@@ -66,10 +69,12 @@ namespace Equilibrium
 				{
 					if (!oldData.ConnectionIds.Contains(connectionId))
 					{
-						var newData = new UserData(login) {ConnectionIds = new List<string>(){ connectionId }};
+						var newData = new UserData(login) {ConnectionIds = new List<string>(){ connectionId }, Disbalance = null};
 						newData.ConnectionIds.AddRange(oldData.ConnectionIds);
 
 						success = ConnectedUsers.TryUpdate(login, newData, oldData);
+
+						LogHelper.Log($"Переподлючён {login}-{connectionId}");
 					}
 					break;
 				}
@@ -104,6 +109,8 @@ namespace Equilibrium
 							newData.ConnectionIds.Remove(connectionId);
 
 							success = ConnectedUsers.TryUpdate(login, newData, oldData);
+
+							LogHelper.Log($"Закрыт коннект {login}-{connectionId}");
 						}
 					}
 					break;
@@ -124,7 +131,7 @@ namespace Equilibrium
 			return logins.ToList();
 		}
 
-		public static void SetDisbalance(List<CaResult> usersDisbalanceList)
+		public static void SetDisbalance(List<DisbalanceResult> usersDisbalanceList)
 		{
 			foreach (var user in usersDisbalanceList)
 			{
@@ -146,14 +153,14 @@ namespace Equilibrium
 			{
 				foreach (var dataConnectionId in data.ConnectionIds)
 				{
-					hubContext.Clients.Client(dataConnectionId).SetDisbalance(data.Login,data.Disbalance);}
-				
+					hubContext.Clients.Client(dataConnectionId).SetDisbalance(data.Login,data.Disbalance);
+				}
 			});
 		}
 
 		private static List<UserData> GetNotificationList()
 		{
-			return ConnectedUsers//.Where(u => u.Value.NeedToNotify)
+			return ConnectedUsers.Where(u => u.Value.NeedToNotify)
 				.Select(u => u.Value).ToList();
 		}
 	}

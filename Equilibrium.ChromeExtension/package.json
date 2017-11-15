@@ -1,0 +1,10 @@
+{
+  "name": "equilibrium.chrome-extension",
+  "version": "0.0.0",
+  "description": "Equilibrium.ChromeExtension",
+  "main": "server.js",
+  "author": {
+    "name": "ArMozgovoy"
+  },
+  "dependencies": {}
+}

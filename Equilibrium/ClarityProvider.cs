@@ -48,7 +48,7 @@ namespace Equilibrium
 
 							foreach (DataRow row in dt.Rows)
 							{
-								result.Data.Add(new CaResult
+								result.Data.Add(new DisbalanceResult
 								{
 									Disbalance = Convert.ToInt32(row[1]),
 									Login = (string) row[0]
@@ -79,10 +79,10 @@ namespace Equilibrium
 	public class GetDisbalanceResult
 	{
 		public bool Ok { get; set; } 
-		public List<CaResult> Data = new List<CaResult>();
+		public readonly List<DisbalanceResult> Data = new List<DisbalanceResult>();
 		public TimeSpan Elapsed { get; set; }
 	}
-	public struct CaResult
+	public struct DisbalanceResult
 	{
 		public string Login { get; set; }
 		public int Disbalance { get; set; }
