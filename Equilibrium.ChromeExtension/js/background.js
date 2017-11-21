@@ -7,10 +7,11 @@ window.onload = function () {
 
 		statusHub.client.setDisbalance = function (name, message) {
 			resetIcon(message);
-		};
+        };
 
+		$.connection.hub.logging = true;
 		// Start the connection.
-		$.connection.hub.start({ transport: ['webSockets', 'serverSentEvents'] });
+        $.connection.hub.start({ transport: ['webSockets', 'serverSentEvents','longPolling'] });
 	} catch (e) {
 		chrome.browserAction.setBadgeText({ text: 'Ошибка' });
 		chrome.browserAction.setTitle({
