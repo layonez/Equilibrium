@@ -12,6 +12,7 @@ namespace Equilibrium
 	public class ClarityProvider
 	{
 		private string ClarityConnectionString { get; }
+
 		public ClarityProvider()
 		{
 			ClarityConnectionString = ConfigurationManager.ConnectionStrings["clarity"].ConnectionString;
@@ -28,43 +29,35 @@ namespace Equilibrium
 			{
 				users = users.Select(u => u.Replace("CROC\\", string.Empty));
 
-				try
+				using (var con = new OracleConnection(ClarityConnectionString))
 				{
-					using (var con = new OracleConnection(ClarityConnectionString))
-					{
-						var sw = new Stopwatch();
-						sw.Start();
+					var sw = new Stopwatch();
+					sw.Start();
 
-						con.Open();
-						var cmdText =
-							$"SELECT * FROM CROC_DISBALANCE_PERIOD WHERE employeeclarityid IN ({string.Join(",", users.Select(u => "'" + u.ToLower() + "'"))})";
+					con.Open();
+					var cmdText =
+						$"SELECT * FROM CROC_DISBALANCE_PERIOD WHERE employeeclarityid IN ({string.Join(",", users.Select(u => "'" + u.ToLower() + "'"))})";
 					var cmd =
-							new OracleCommand(cmdText
-								, con);
-						using (var da = new OracleDataAdapter(cmd))
-						{
-							var dt = new DataTable();
-							da.Fill(dt);
+						new OracleCommand(cmdText
+							, con);
+					using (var da = new OracleDataAdapter(cmd))
+					{
+						var dt = new DataTable();
+						da.Fill(dt);
 
-							foreach (DataRow row in dt.Rows)
+						foreach (DataRow row in dt.Rows)
+						{
+							result.Data.Add(new DisbalanceResult
 							{
-								result.Data.Add(new DisbalanceResult
-								{
-									Disbalance = Convert.ToInt32(row[1]),
-									Login = (string) row[0]
-								});
-							}
+								Disbalance = Convert.ToInt32(row[1]),
+								Login = (string) row[0]
+							});
 						}
-						
-						sw.Stop();
-						result.Elapsed = sw.Elapsed;
-						result.Ok = true;
 					}
-				}
-				catch (Exception e)
-				{
-					Console.WriteLine(e);
-					throw;
+
+					sw.Stop();
+					result.Elapsed = sw.Elapsed;
+					result.Ok = true;
 				}
 			}
 			else

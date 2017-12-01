@@ -1,19 +1,11 @@
 {
-    //manifest spec: http://developer.chrome.com/extensions/manifest.html
-    //required
-    "name": "croc equilibrium",
+    "name": "equilibrium",
     "version": "1.0",
     "manifest_version": 2,
-
-    //recommended
-    "description": "Баланс ваших списаний в реальном времени, следи за блокировкой интернета и списывай время вовремя",
+	"description": "Баланс ваших списаний в реальном времени, следи за блокировкой интернета и списывай время вовремя",
     "icons": {
-        //"19": "images/icon_19.png",
-        "48": "images/red_48.png"
-        //"128": "images/icon_128.png"
+					"48": "images/red_48.png"
     },
-
-    //required
     "browser_action": {
         "default_title": "browser_action: default_title",
         "default_icon": {
@@ -24,8 +16,6 @@
     "background": {
 					"scripts": [ "js/background.js", "js/vendor/jquery-3.2.1.js", "js/vendor/jquery.signalR-2.2.2.js", "js/signalr/hubs.js" ]
   	},
-
-    //additional
 	"web_accessible_resources": [
 		"images/red_48.png",
 		"images/green_48.png",

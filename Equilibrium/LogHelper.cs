@@ -27,23 +27,32 @@ namespace Equilibrium
 
 		public static void LogStatistic(List<Tuple<double, int, int>> requestTimings)
 		{
-			var statisticLine =
-				$"{DateTime.Now.ToLongTimeString()} {DateTime.Now.ToLongDateString()} : Выполненно запросов - {requestTimings.Count}; Среднее время запроса - {requestTimings.Sum(t => t.Item1) / requestTimings.Count}; Среднее время ожидания - {requestTimings.Sum(t => t.Item3) / requestTimings.Count}; Среднее колличество активных пользователей - {requestTimings.Sum(t => t.Item2) / requestTimings.Count};";
-			var txtfile = new FileInfo(statisticsFileName);
-			if (!txtfile.Exists)
+			try
 			{
-				File.Create(statisticsFileName);
-				txtfile = new FileInfo(statisticsFileName);
+				var statisticLine =
+					$"{DateTime.Now.ToLongTimeString()} {DateTime.Now.ToLongDateString()} : Выполненно запросов - {requestTimings.Count}; Среднее время запроса - {requestTimings.Sum(t => t.Item1) / requestTimings.Count}; Среднее время ожидания - {requestTimings.Sum(t => t.Item3) / requestTimings.Count}; Среднее колличество активных пользователей - {requestTimings.Sum(t => t.Item2) / requestTimings.Count};";
+				var txtfile = new FileInfo(statisticsFileName);
+				if (!txtfile.Exists)
+				{
+					File.Create(statisticsFileName);
+					txtfile = new FileInfo(statisticsFileName);
+
+					Log($"Создан файл статистики {statisticsFileName}");
+				}
+				if (txtfile.Length > (20 * 1024 * 1024))       // ## NOTE: 20MB max file size
+				{
+					var lines = File.ReadAllLines(statisticsFileName).Skip(10).ToList();
+					lines.Add(statisticLine);
+					File.WriteAllLines(statisticsFileName, lines);
+				}
+				else
+				{
+					File.AppendAllLines(statisticsFileName, new List<string>() { statisticLine });
+				}
 			}
-			if (txtfile.Length > (20 * 1024 * 1024))       // ## NOTE: 20MB max file size
+			catch (Exception e)
 			{
-				var lines = File.ReadAllLines(statisticsFileName).Skip(10).ToList();
-				lines.Add(statisticLine);
-				File.WriteAllLines(statisticsFileName, lines);
-			}
-			else
-			{
-				File.AppendAllLines(statisticsFileName, new List<string>(){ statisticLine });
+				Log($"Во время записи статистики в файл {statisticsFileName} возникла ошибка: {e}");
 			}
 		}
 	}

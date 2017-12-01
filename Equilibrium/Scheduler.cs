@@ -37,28 +37,35 @@ namespace Equilibrium
 		
 		private void GetDisbalanceAndSendToClients()
 		{
-			if (_requestTimings.Count > 100)
+			try
 			{
-				LogHelper.LogStatistic(_requestTimings);
-				_requestTimings.Clear();
-			}
-			var disbalance = ClarityProvider.GetDisbalance(UserConnectionManager.GetActiveUsers());
-			if (disbalance.Ok && disbalance.Data.Any())
-			{
-				UserConnectionManager.SetDisbalance(disbalance.Data);
-				UserConnectionManager.NotifyAll();
-				var timeToNextCall = ThresholdHelper.GetTimeToNextCall(disbalance.Elapsed.TotalSeconds);
-				Task.Delay(TimeSpan.FromMilliseconds(timeToNextCall))
-					.ContinueWith(task => GetDisbalanceAndSendToClients());
+				if (_requestTimings.Count > 100)
+				{
+					LogHelper.LogStatistic(_requestTimings);
+					_requestTimings.Clear();
+				}
+				var disbalance = ClarityProvider.GetDisbalance(UserConnectionManager.GetActiveUsers());
+				if (disbalance.Ok && disbalance.Data.Any())
+				{
+					UserConnectionManager.SetDisbalance(disbalance.Data);
+					UserConnectionManager.NotifyAll();
+					var timeToNextCall = ThresholdHelper.GetTimeToNextCall(disbalance.Elapsed.TotalSeconds);
+					Task.Delay(TimeSpan.FromMilliseconds(timeToNextCall))
+						.ContinueWith(task => GetDisbalanceAndSendToClients());
 
-				_requestTimings.Add(new Tuple<double, int, int>(disbalance.Elapsed.TotalSeconds, disbalance.Data.Count, timeToNextCall));
-			}
-			else
-			{
-				Task.Delay(TimeSpan.FromMilliseconds(1000))
-					.ContinueWith(task => GetDisbalanceAndSendToClients());
+					_requestTimings.Add(new Tuple<double, int, int>(disbalance.Elapsed.TotalSeconds, disbalance.Data.Count, timeToNextCall));
+				}
+				else
+				{
+					Task.Delay(TimeSpan.FromMilliseconds(1000))
+						.ContinueWith(task => GetDisbalanceAndSendToClients());
 
-				_requestTimings.Add(new Tuple<double, int, int>(0, 0, 0));
+					_requestTimings.Add(new Tuple<double, int, int>(0, 0, 0));
+				}
+			}
+			catch (Exception e)
+			{
+				LogHelper.Log(e.ToString());
 			}
 		}
 	}

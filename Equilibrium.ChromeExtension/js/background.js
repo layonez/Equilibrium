@@ -1,6 +1,6 @@
 window.onload = function () {
 	try {
-		$.connection.hub.url = "http://armozgovoy-mob:666/signalr";
+        $.connection.hub.url = "http://equilibrium.croc.ru/signalr";
 
 		// Declare a proxy to reference the hub.
 		var statusHub = $.connection.statusHub;

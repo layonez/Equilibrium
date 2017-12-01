@@ -74,7 +74,7 @@ namespace Equilibrium
 
 						success = ConnectedUsers.TryUpdate(login, newData, oldData);
 
-						LogHelper.Log($"Переподлючён {login}-{connectionId}");
+						LogHelper.Log($"Переподключён {login}-{connectionId}");
 					}
 					break;
 				}
@@ -90,13 +90,12 @@ namespace Equilibrium
 		public static bool Remove(string login, string connectionId)
 		{
 			var success = false;
+			login = login.Replace("CROC\\", string.Empty).ToLower();
+
 			if (!string.IsNullOrWhiteSpace(login) &&
-			    login.Contains("CROC\\") &&
 			    ConnectedUsers.ContainsKey(login)
 			)
 			{
-				login = login.Replace("CROC\\", string.Empty).ToLower();
-
 				while (ConnectedUsers.TryGetValue(login, out UserData oldData))
 				{
 					if (oldData.ConnectionIds.Contains(connectionId))
