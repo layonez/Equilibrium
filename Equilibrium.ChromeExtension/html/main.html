@@ -1,28 +1,35 @@
 <html>
-    <head>
-        <!-- load stylesheets: Bootstrap v2.3.0 - http://twitter.github.com/bootstrap/index.html -->
-        <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css"></link>
+<head>
+	<!-- load stylesheets: Bootstrap v2.3.0 - http://twitter.github.com/bootstrap/index.html -->
+	<link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css"></link>
 
-        <!-- load javascript: jQuery 1.9.1 - http://jquery.com/ -->
-        <script type="text/javascript" src="../js/vendor/jquery-3.2.1.js"></script>
+	<!-- load javascript: jQuery 1.9.1 - http://jquery.com/ -->
+	<script type="text/javascript" src="../js/vendor/jquery-3.2.1.js"></script>
 
-        <!-- load javascript: Bootstrap v2.3.0 - http://twitter.github.com/bootstrap/ -->
-        <script type="text/javascript" src="../js/bootstrap.min.js"></script>
+	<!-- load javascript: Bootstrap v2.3.0 - http://twitter.github.com/bootstrap/ -->
+	<script type="text/javascript" src="../js/bootstrap.min.js"></script>
 
-        <!-- load stylesheets: internal -->
-        <link rel="stylesheet" type="text/css" href="../css/global.css"></link>
-        <link rel="stylesheet" type="text/css" href="../css/main.css"></link>
-    </head>
-    <body>
-        <div id="main-outer">
-            <div id="main-inner">
-                <div id="main-title">Хуяк и в продакшн</div>
-                <img id="main-image" src="https://www.croc.ru/images/main1.jpg" />
-                <div id="main-about-text">Спиши время!</div>
-            </div>
-        </div>
+	<!-- load stylesheets: internal -->
+	<link rel="stylesheet" type="text/css" href="../css/global.css"/>
+	<link rel="stylesheet" type="text/css" href="../css/main.css"/>
+</head>
+<body>
+<div id="main-outer">
+	<div id="main-inner">
+		<div><a style="z-index: 1" href="https://jira.croc.ru/secure/TimeSheetPage!default.jspa" target="_blank">Списать время в Jira</a>
+		</div>
+		<div><a style="z-index: 1" href="https://clarityapp/niku/nu#action:timeadmin.timesheetBrowserReturn" target="_blank">Списать время в Clarity</a>
+		</div>
+		<div><a style="z-index: 1" href="https://clarityapp/niku/nu#action:tab1&frame_id=5012012" target="_blank">Открыть дисбаланс </a>
+		</div>
+	</div>
+	<img id="main-image" style="filter: opacity(13%); position: absolute; width: 350px; margin: -40px; z-index: -1; transform: scale(1.5);" src="https://www.croc.ru/images/main1.jpg"/>
+	<div style="padding: 10px;font-size: x-small;color: gray;">Дисбаланс рассчитывается аналогично представлению "Баланс списаний на период ЗП" в Сlarity.<br>
+		Отрицательный показатель дисбаланса означает, что на период ЗП списано больше нормы. <br>
+	Политика блокировки интернета достуна для ознакомления по <a style="z-index: 1" href="https://jive.croc.ru/docs/DOC-113372" target="_blank">ссылке.</a></div>
 
-        <!-- load javascript: unique html page javascript file -->
-        <script type="text/javascript" src="../js/main.js"></script>
-    </body>
+</div>
+<!-- load javascript: unique html page javascript file -->
+<script type="text/javascript" src="../js/main.js"></script>
+</body>
 </html>
