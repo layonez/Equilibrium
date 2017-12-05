@@ -1,16 +1,15 @@
 window.onload = function () {
 	try {
         $.connection.hub.url = "http://equilibrium.croc.ru/signalr";
-
-		// Declare a proxy to reference the hub.
-		var statusHub = $.connection.statusHub;
-
-		statusHub.client.setDisbalance = function (name, message) {
+        const statusHub = $.connection.statusHub;
+        statusHub.client.setDisbalance = function (name, message) {
 			resetIcon(message);
         };
-
+		$.connection.hub.disconnected(function () {
+            console.log('Потеряно соединение с хабом :(');
+			$.connection.hub.start({ transport: ['webSockets', 'serverSentEvents', 'longPolling'] });
+		});
 		$.connection.hub.logging = true;
-		// Start the connection.
         $.connection.hub.start({ transport: ['webSockets', 'serverSentEvents','longPolling'] });
 	} catch (e) {
 		chrome.browserAction.setBadgeText({ text: 'Ошибка' });
@@ -19,6 +18,19 @@ window.onload = function () {
 		});
     }
 }
+
+setInterval(function () {
+    if ($.connection.statusHub.connection.state === $.connection.connectionState.disconnected) {
+        try {
+	        $.connection.hub.start({ transport: ['webSockets', 'serverSentEvents', 'longPolling'] });
+        } catch (e) {
+	        chrome.browserAction.setBadgeText({ text: 'Ошибка' });
+	        chrome.browserAction.setTitle({
+		        title: 'При подключении к серверу возникла ошибка...'
+	        });
+        }
+	}
+}, 1 * 60 * 1000); // every 1 min
 
 chrome.browserAction.setBadgeBackgroundColor({color:[190, 190, 190, 230]});
 chrome.browserAction.setIcon({ path: 'images/gray_48.png' });

@@ -1,6 +1,6 @@
 {
     "name": "equilibrium",
-    "version": "1.1",
+    "version": "1.2",
     "manifest_version": 2,
 	"description": "Баланс ваших списаний в реальном времени, следи за блокировкой интернета и списывай время вовремя",
     "icons": {
@@ -22,6 +22,5 @@
 		"images/yellow_48.png",
 		"images/gray_48.png"
 	],
-    "options_page": "html/options.html",
     "homepage_url": "http://croc.ru/"
 }

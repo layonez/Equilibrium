@@ -35,7 +35,6 @@
     <Content Include="css\main.css" />
     <Content Include="css\options.css" />
     <Content Include="html\main.html" />
-    <Content Include="html\options.html" />
     <Content Include="images\gray_256.png" />
     <Content Include="images\gray_48.png" />
     <Content Include="images\green_256.png" />
