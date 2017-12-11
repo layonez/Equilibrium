@@ -20,17 +20,8 @@ window.onload = function () {
 }
 
 setInterval(function () {
-    if ($.connection.statusHub.connection.state === $.connection.connectionState.disconnected) {
-        try {
-	        $.connection.hub.start({ transport: ['webSockets', 'serverSentEvents', 'longPolling'] });
-        } catch (e) {
-	        chrome.browserAction.setBadgeText({ text: 'Ошибка' });
-	        chrome.browserAction.setTitle({
-		        title: 'При подключении к серверу возникла ошибка...'
-	        });
-        }
-	}
-}, 1 * 60 * 1000); // every 1 min
+	chrome.runtime.reload();
+}, 5 * 60 * 1000); // every 5 min
 
 chrome.browserAction.setBadgeBackgroundColor({color:[190, 190, 190, 230]});
 chrome.browserAction.setIcon({ path: 'images/gray_48.png' });
