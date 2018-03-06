@@ -68,11 +68,12 @@ function getDayWord(daysToBlockInternet) {
 	case 1:
             dayWord = `через ${daysToBlockInternet} день`;
 		break;
-	case 5:
-            dayWord = `через ${daysToBlockInternet} дней`;
-        break;
-	default:
-            dayWord = `через ${daysToBlockInternet} дня`;
+    default:
+            if (daysToBlockInternet < 5) {
+                dayWord = `через ${daysToBlockInternet} дня`;
+            } else {
+                dayWord = `через ${daysToBlockInternet} дней`;
+            }
 		break;
     }
 	return dayWord;
